@@ -131,7 +131,7 @@ namespace ЖКХ
                 for (int i = 0; i < 5; i++)
                     randId += rand.Next(10).ToString();
 
-                var helper = new WordHelper("Чек.docx");
+                var helper = new WordHelper("чек.docx");
                 var items = new Dictionary<string, string>
                 {
                 { "{Уникальный_номер}", randId },
