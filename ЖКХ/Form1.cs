@@ -25,7 +25,6 @@ namespace ЖКХ
             InitializeComponent();
             textBox6.Text = "Стоимость 1 кубического метра холодной воды стоит 9,32 рублей," +
                 "\n 1 кубический метр горячей воды – 12,76 \nрублей";
-            
         }
 
         private void textBox4_TextChanged(object sender, EventArgs e)
@@ -37,54 +36,42 @@ namespace ЖКХ
         {
 
         }
-
+        /// <summary>
+        /// Рассчет данных по тарифам
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void button1_Click(object sender, EventArgs e)
         {
-            if (textBox1.Text == "" || textBox2.Text == "" || checkBox1.Checked == false || textBox3.Text == "")
+            try
             {
-                MessageBox.Show("Заполните все данные", "Сообщение", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            else
-            {
-                double Hot = Convert.ToDouble(textBox1.Text);
-                double Cold = Convert.ToDouble(textBox2.Text);
-                double Light = Convert.ToDouble(textBox3.Text);
-                double ExistingIndications = Convert.ToDouble(textBox5.Text);
-                double PastTestimony = Convert.ToDouble(textBox4.Text);
+                if (textBox1.Text == "" || textBox2.Text == "" || checkBox1.Checked == false || textBox3.Text == "")
+                {
+                    MessageBox.Show("Заполните все данные", "Сообщение", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+                else
+                {
+                    double Hot = Convert.ToDouble(textBox1.Text);
+                    double Cold = Convert.ToDouble(textBox2.Text);
+                    double Light = Convert.ToDouble(textBox3.Text);
+                    double ExistingIndications = Convert.ToDouble(textBox5.Text);
+                    double PastTestimony = Convert.ToDouble(textBox4.Text);
 
-                double WaterH = Convert.ToDouble(Hot * Price.HotWater);
-                double WaterC = Convert.ToDouble(Cold * Price.ColdWater);
-                double LightV = Convert.ToDouble(ExistingIndications - PastTestimony);
-                double LightT = Convert.ToDouble(LightV * Light);
-                double PricetotalHCHL = WaterH + WaterC + Price.Heating + LightT;
-                textBox6.Text = Convert.ToString($"{PricetotalHCHL}.Руб");
+                    double WaterH = Convert.ToDouble(Hot * Price.HotWater);
+                    double WaterC = Convert.ToDouble(Cold * Price.ColdWater);
+                    double LightV = Convert.ToDouble(ExistingIndications - PastTestimony);
+                    double LightT = Convert.ToDouble(LightV * Light);
+                    double PricetotalHCHL = WaterH + WaterC + Price.Heating + LightT;
+                    textBox6.Text = Convert.ToString($"{PricetotalHCHL}.Руб");
+                }
             }
-            //if (textBox1.Text != "" && textBox2.Text != "" )
-            //{
-            //    double WaterH = Convert.ToDouble(Hot * Price.HotWater);
-            //    double WaterC = Convert.ToDouble(Cold * Price.ColdWater);
-            //    double Pricetotal = WaterH + WaterC;
-            //    label9.Text = Convert.ToString(Pricetotal);
-
-            //}
-            //else if (textBox1.Text != "" || textBox2.Text != "" || checkBox1.Checked == true)
-            //{
-            //    double WaterH = Convert.ToDouble(Hot * Price.HotWater);
-            //    double WaterC = Convert.ToDouble(Cold * Price.ColdWater);
-            //    double PricetotalHCH = WaterH + WaterC + Price.Heating;
-            //    label9.Text = Convert.ToString(PricetotalHCH);
-            //}
-            //else if (textBox1.Text != "" || textBox2.Text != "" || checkBox1.Checked == true || textBox3.Text != "")
-            //{
-            //    double WaterH = Convert.ToDouble(Hot * Price.HotWater);
-            //    double WaterC = Convert.ToDouble(Cold * Price.ColdWater);
-            //    double LightV = Convert.ToDouble(ExistingIndications - PastTestimony);
-            //    double LightT = Convert.ToDouble(LightV * Light);
-            //    double PricetotalHCHL = WaterH + WaterC + Price.Heating + LightT;
-            //    label9.Text = Convert.ToString(PricetotalHCHL);
-            //}
+            catch (Exception ex) { MessageBox.Show(ex.Message, "Error"); }
         }
-
+        /// <summary>
+        /// Запрет на прописть букв, запрещенно все кроме цифр
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void textBox1_KeyPress(object sender, KeyPressEventArgs e)
         {
             if(Char.IsNumber(e.KeyChar) | e.KeyChar == '\b') return;
@@ -109,6 +96,11 @@ namespace ЖКХ
            
         }
 
+        /// <summary>
+        /// Добавление картинки и вывод ее на форму 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void button2_Click(object sender, EventArgs e)
         {
             ofd.Filter = "Image Files(*.JPG;*.JPEG;)|*.JPG;*.JPEG; | All files(*.*) | *.*";
@@ -124,7 +116,11 @@ namespace ЖКХ
                 }
             }
         }
-
+        /// <summary>
+        /// Создание и формирование чека
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void button3_Click(object sender, EventArgs e)
         {
             //Создаём объект документа
@@ -146,7 +142,7 @@ namespace ЖКХ
                 int i = 0;
                 num++;
                 string nm = Convert.ToString(num);
-                string[] data = new string[5] { DateTime.Now.ToShortDateString(), textBox9.Text, nm, textBox10.Text, textBox8.Text };
+                string[] data = new string[3] {DateTime.Now.ToShortDateString(), nm, textBox6.Text};
                 foreach (Word.Bookmark mark in wBookmarks)
                 {
 
@@ -155,7 +151,7 @@ namespace ЖКХ
                     i++;
                 }
             }
-            catch (Exception ex) { }
+            catch (Exception ex) { MessageBox.Show(ex.Message, "Error"); }
         }
     }
 }
