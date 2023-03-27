@@ -123,33 +123,24 @@ namespace ЖКХ
         /// <param name="e"></param>
         private void button3_Click(object sender, EventArgs e)
         {
-            //Создаём объект документа
-            Word.Document doc = null;
             try
             {
-                // Создаём объект приложения
-                Word.Application app = new Word.Application();
-                // Путь до шаблона документа
-                string source = Path.Combine(Directory.GetCurrentDirectory(), "Чек.docx");
-                // Открываем
-                doc = app.Documents.Add(source);
-                doc.Activate();
+                Random rand = new Random();
+                string randId = "";
 
-                // Добавляем информацию
-                // wBookmarks содержит все закладки
-                Word.Bookmarks wBookmarks = doc.Bookmarks;
-                Word.Range wRange;
-                int i = 0;
-                num++;
-                string nm = Convert.ToString(num);
-                string[] data = new string[3] {DateTime.Now.ToShortDateString(), nm, textBox6.Text};
-                foreach (Word.Bookmark mark in wBookmarks)
+                for (int i = 0; i < 5; i++)
+                    randId += rand.Next(10).ToString();
+
+                var helper = new WordHelper("Чек.docx");
+                var items = new Dictionary<string, string>
                 {
+                { "{Уникальный_номер}", randId },
+                { "{Дата}", DateTime.Now.ToString("dd.MM.yy") },
+                { "{Товар}", "Услуги"},
+                { "{итог}", textBox6.ToString() }
+                };
 
-                    wRange = mark.Range;
-                    wRange.Text = data[i];
-                    i++;
-                }
+                helper.Process(items);
             }
             catch (Exception ex) { MessageBox.Show(ex.Message, "Error"); }
         }
